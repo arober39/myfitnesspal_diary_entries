@@ -18,37 +18,73 @@ es.info()
 # myfitnesspal client
 client = myfitnesspal.Client()
 
-def send_meals_to_elasticsearch(diary_entry):
+#---------------------------------------------------
+#           Output - option 1 - JSON file
+# --------------------------------------------------
+
+# send breakfast, lunch, dinner structs to JSON file
+def send_meals_to_json_file(json_object):
+    meals_json_object = json.dumps(json_object, indent=4)
+    meals_json = json.loads(meals_json_object)
+    
+    with open("meals_macros_calories.json", "a") as outfile:
+        outfile.write(meals_json + ',')
+
+# send each days overall calories and macros to JSON file
+def send_todays_total_to_json_file(json_object):
+    total_json_object = json.dumps(json_object, indent=4)
+    total_json = json.loads(total_json_object)
+
+    with open("macros_calories_overall.json", "a") as outfile:
+        outfile.write(total_json_object + ',')
+
+#---------------------------------------------------
+#         Output - option 2 - Elasticsearch
+# --------------------------------------------------
+
+# send breakfast, lunch, dinner structs to ES
+def send_meals_to_elasticsearch(meals_diary_entry):
     es.index(
         index='myfitnesspal_index',
-        document=diary_entry
+        document=meals_diary_entry
     )
 
-def send_todays_total_to_elasticsearch(daily_entry):
+# send each days overall calories and macros to ES
+def send_todays_total_to_elasticsearch(total_daily_entry):
     es.index(
         index='daily_myfitnesspal_total_index',
-        document=daily_entry
+        document=total_daily_entry
     )
 
-def add_date_to_daily_macros(date, daily_totals):
+def total_daily_macros_and_calories_output(date, daily_totals_dict):
     daily_total_dict = {
         'date': date,
-        'daily_macros': daily_totals
+        'daily_macros': daily_totals_dict
     }
-    # uncomment line below when you are ready to send daily macros to elasticsearch index
+    # uncomment one of lines below when to send 
+    # total macros and calories to either
+    # elasticsearch index or JSON file
+
     # send_todays_total_to_elasticsearch(daily_total_dict)
+    # send_todays_total_to_json_file(daily_total_dict)
 
-
-def convert_to_json_struct(breakfast_struct, lunch_struct, dinner_struct, date):
-
+def each_meals_macros_and_calories_output(breakfast_struct, lunch_struct, dinner_struct):
     breakfast_json_object = json.dumps(breakfast_struct)
-    send_meals_to_elasticsearch(breakfast_json_object)
+    # send_meals_to_json_file(breakfast_json_object)
+    # send_meals_to_elasticsearch(breakfast_json_object)
 
     lunch_json_object = json.dumps(lunch_struct)
-    send_meals_to_elasticsearch(lunch_json_object)
+    # send_meals_to_json_file(lunch_json_object)
+    # send_meals_to_elasticsearch(lunch_json_object)
 
     dinner_json_object = json.dumps(dinner_struct)
-    send_meals_to_elasticsearch(dinner_json_object)
+    # send_meals_to_json_file(dinner_json_object)
+    # send_meals_to_elasticsearch(dinner_json_object)
+
+# -----------------------------------------------------
+#        Combine data outputted from myfitnesspal 
+#              client into a single struct
+# -----------------------------------------------------
 
 def extract_name_of_meal(meal_string):
     # extract meals
@@ -105,7 +141,7 @@ def parse_each_meal_for_extraction(foods, date, meal_type, totals):
     return outer_dict
 
 
-def grab_meals_per_day(year, month, day, date):
+def structure_nutrition_data(year, month, day, date):
     if month[0] == '0':
         month = month[1]
 
@@ -113,10 +149,10 @@ def grab_meals_per_day(year, month, day, date):
     myfitnesspal_day = client.get_date(int(year), int(month), int(day))
 
     if myfitnesspal_day:
-        # get totals for the day
-        add_date_to_daily_macros(date, myfitnesspal_day.totals)
+        # get total calories and macros for the day
+        total_daily_macros_and_calories_output(date, myfitnesspal_day.totals)
 
-        # grab all 3 meals
+        # get calories and macros for each meal of the day
         breakfast = myfitnesspal_day.meals[0]
         lunch = myfitnesspal_day.meals[1]
         dinner = myfitnesspal_day.meals[2]
@@ -131,8 +167,8 @@ def grab_meals_per_day(year, month, day, date):
         lunch_dict = parse_each_meal_for_extraction(lunch_foods, date, lunch_vars, lunch.totals)
         dinner_dict = parse_each_meal_for_extraction(dinner_foods, date, dinner_vars, dinner.totals)
 
-        # uncomment line below when you are ready to send meals to elasticsearch
-        # convert_to_json_struct(breakfast_dict, lunch_dict, dinner_dict, date)
+        # send each meal dict to outputting function
+        each_meals_macros_and_calories_output(breakfast_dict, lunch_dict, dinner_dict)
     else:
         print('found an empty struct')
         return
@@ -142,10 +178,9 @@ def parse_range_of_dates(dates):
         year = item[:4]
         month = item[5:7]
         day = item[8:]
-        grab_meals_per_day(year, month, day, item)
+        structure_nutrition_data(year, month, day, item)
 
 def main():
-
     start_date = date(2020, 10, 1)
     end_date = date(2020, 10, 4)
 
