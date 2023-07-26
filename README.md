@@ -24,7 +24,7 @@ def main():
     end_date = date(2020, 10, 2)
 ```
 
-## Store results in JSON file
+## Option 1 - Store results in JSON file
 1. First, create two separate json files 
 - "macros_calories_overall.json" - to store total calories and macros for the day
 - "meals_macros_calories.json" - to store calories and macros for each meal of that day
@@ -57,7 +57,7 @@ def each_meals_macros_and_calories_output(breakfast_struct, lunch_struct, dinner
     # send_meals_to_elasticsearch(dinner_json_object)
 ```
 
-## Send JSON to Elasticsearch and store as index
+## Option 2 - Send JSON to Elasticsearch and store as index
 To send data to ES using the python client, you will first need:
 
 1. An [Elastic Cloud account](https://cloud.elastic.co/).
