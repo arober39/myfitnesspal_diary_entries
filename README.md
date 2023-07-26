@@ -3,12 +3,12 @@
 ![Screenshot](myfitnesspalKibana.png)
 
 ## setup
-### As outlined in python-myfitnesspal documentation(link), we first need to install the package
+As outlined in python-myfitnesspal documentation(link), we first need to install the package
 ```
 pip install myfitnesspal
 ```
 
-### I also found it complained the typing extensions package was missing. If that happens, simply install that as well
+I also found it complained the typing extensions package was missing. If that happens, simply install that as well
 ```
 pip install typing-extensions
 ```
@@ -25,11 +25,13 @@ def main():
 ```
 
 ## Store Results in JSON File
-### First, create two separate json files 
-### "macros_calories_overall.json" - to store total calories and macros for the day
-### "meals_macros_calories.json" - to store calories and macros for each meal of that day
-### Uncomment function calls in both output functions to send nutrition data to two seperate JSON files
-### Quick note, remove last comma in json file and wrap entire output in braces to denote list of objects
+1. First, create two separate json files 
+- "macros_calories_overall.json" - to store total calories and macros for the day
+- "meals_macros_calories.json" - to store calories and macros for each meal of that day
+
+2. Uncomment function calls in both output functions to send nutrition data to two seperate JSON files
+
+Quick note: remove last comma in json file and wrap entire output in braces to denote list of objects
 
 ```
 def total_daily_macros_and_calories_output(date, daily_totals_dict):
@@ -56,8 +58,8 @@ def each_meals_macros_and_calories_output(breakfast_struct, lunch_struct, dinner
 ```
 
 ## Send JSON to Elasticsearch and store as index
-### To send data to ES, you will first need an Elastic Cloud account (link)
-### Uncomment function calls in both output functions to send nutrition data to ES
+To send data to ES, you will first need an Elastic Cloud account (link)
+Uncomment function calls in both output functions to send nutrition data to ES
 
 ```
 def total_daily_macros_and_calories_output(date, daily_totals_dict):
