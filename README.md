@@ -1,9 +1,9 @@
-# This is used to send myfitnessal diary entries to Elasticsearch
+# Send myfitnessal data to Elasticsearch
 
 ![Screenshot](myfitnesspalKibana.png)
 
 ## Setup
-As outlined in python-myfitnesspal documentation(link), we first need to install the package
+As outlined in python-myfitnesspal [documentation](https://python-myfitnesspal.readthedocs.io/en/latest/getting_started.html), we first need to install the package
 ```
 pip install myfitnesspal
 ```
@@ -13,9 +13,9 @@ I also found it complained the typing extensions package was missing. If that ha
 pip install typing-extensions
 ```
 
-Since the myfitnesspal package uses cookies to log in from the terminal, we will have to grant the terminal full disk access (link). Ensure you grant access to a browser you've prevously used to log into myfitnesspal.
+Since the myfitnesspal package uses cookies to log in from the terminal, we will have to grant the [terminal full disk access](https://osxdaily.com/2018/10/09/fix-operation-not-permitted-terminal-error-macos/). Ensure you grant access to a browser you've prevously used to log into myfitnesspal.
 
-## Pass in desired date range
+## Pass date range
 
 ```
 def main():
@@ -24,7 +24,7 @@ def main():
     end_date = date(2020, 10, 2)
 ```
 
-## Store Results in JSON File
+## Store results in JSON file
 1. First, create two separate json files 
 - "macros_calories_overall.json" - to store total calories and macros for the day
 - "meals_macros_calories.json" - to store calories and macros for each meal of that day
@@ -58,8 +58,12 @@ def each_meals_macros_and_calories_output(breakfast_struct, lunch_struct, dinner
 ```
 
 ## Send JSON to Elasticsearch and store as index
-To send data to ES, you will first need an Elastic Cloud account (link)
-Uncomment function calls in both output functions to send nutrition data to ES
+To send data to ES using the python client, you will first need:
+
+1. An [Elastic Cloud account](https://cloud.elastic.co/).
+2. A new file ```mfp_elastic.ini``` with cloud_id, username, and password as shown [here](https://www.elastic.co/guide/en/elasticsearch/client/python-api/current/connecting.html).
+
+Then, uncomment function calls in both output functions to send nutrition data to ES
 
 ```
 def total_daily_macros_and_calories_output(date, daily_totals_dict):
