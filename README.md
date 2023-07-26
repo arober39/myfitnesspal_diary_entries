@@ -1,4 +1,4 @@
-# Send myfitnessal data to Elasticsearch
+# Send myfitnesspal data to Elasticsearch
 
 ![Screenshot](myfitnesspalKibana.png)
 
