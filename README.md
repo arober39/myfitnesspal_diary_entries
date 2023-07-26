@@ -1,6 +1,6 @@
 # This is used to send myfitnessal diary entries to Elasticsearch
 
-![Screenshot](MFP_Kibana_Dashboard.png)
+![Screenshot](myfitnesspalKibana.png)
 
 ## setup
 ### As outlined in python-myfitnesspal documentation(link), we first need to install the package
