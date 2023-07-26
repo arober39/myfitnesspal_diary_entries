@@ -1,8 +1,10 @@
 # Send myfitnesspal data to Elasticsearch
 
+## Kibana Dashboard
+
 ![Screenshot](myfitnesspalKibana.png)
 
-## Setup
+### Setup
 As outlined in python-myfitnesspal [documentation](https://python-myfitnesspal.readthedocs.io/en/latest/getting_started.html), we first need to install the package.
 ```
 pip install myfitnesspal
@@ -15,7 +17,7 @@ pip install typing-extensions
 
 Since the myfitnesspal package uses cookies to log in from the terminal, we will have to grant the [terminal full disk access](https://osxdaily.com/2018/10/09/fix-operation-not-permitted-terminal-error-macos/). Ensure you grant access to a browser you've prevously used to log into myfitnesspal.
 
-### Pass in date range
+#### Pass in date range
 
 ```
 def main():
@@ -23,8 +25,8 @@ def main():
     start_date = date(2020, 10, 1)
     end_date = date(2020, 10, 2)
 ```
-## Output
-### Option 1 - Output to JSON file
+### Output
+#### Option 1 - Output to JSON file
 1. First, create two separate json files 
 - "macros_calories_overall.json" - to store total calories and macros for the day
 - "meals_macros_calories.json" - to store calories and macros for each meal of that day
@@ -57,7 +59,7 @@ def each_meals_macros_and_calories_output(breakfast_struct, lunch_struct, dinner
     # send_meals_to_elasticsearch(dinner_json_object)
 ```
 
-### Option 2 - Send JSON to Elasticsearch and store as index
+#### Option 2 - Send JSON to Elasticsearch and store as index
 To send data to ES using the python client, you will first need:
 
 1. An [Elastic Cloud account](https://cloud.elastic.co/).
