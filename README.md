@@ -22,14 +22,6 @@ def main():
 
     start_date = date(2020, 10, 1)
     end_date = date(2020, 10, 2)
-
-    delta = timedelta(days=1)
-    dates = []
-    while start_date <= end_date:
-        dates.append(start_date.isoformat())
-        start_date += delta
-
-    parse_range_of_dates(dates)
 ```
 
 ## Store Results in JSON File
@@ -65,8 +57,7 @@ def each_meals_macros_and_calories_output(breakfast_struct, lunch_struct, dinner
 
 ## Send JSON to Elasticsearch and store as index
 ### To send data to ES, you will first need an Elastic Cloud account (link)
-### steps to use Elasticsearch python client
-### Finally, uncomment function calls in both output functions to send nutrition data to ES
+### Uncomment function calls in both output functions to send nutrition data to ES
 
 ```
 def total_daily_macros_and_calories_output(date, daily_totals_dict):
