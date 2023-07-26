@@ -2,7 +2,7 @@
 
 ![Screenshot](myfitnesspalKibana.png)
 
-## setup
+## Setup
 As outlined in python-myfitnesspal documentation(link), we first need to install the package
 ```
 pip install myfitnesspal
@@ -13,7 +13,7 @@ I also found it complained the typing extensions package was missing. If that ha
 pip install typing-extensions
 ```
 
-### Since the myfitnesspal package uses cookies to log in from the terminal, we will have to grant the terminal full disk access. You can do this, by following the steps outlined here (link).
+Since the myfitnesspal package uses cookies to log in from the terminal, we will have to grant the terminal full disk access (link). Ensure you grant access to a browser you've prevously used to log into myfitnesspal.
 
 ## Pass in desired date range
 
