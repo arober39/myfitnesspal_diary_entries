@@ -27,7 +27,7 @@ def main():
 ```
 ### Output
 #### Option 1 - Output to JSON file
-1. First, create two separate json files 
+1. Output will be sent to separate json files
 - "macros_calories_overall.json" - to store total calories and macros for the day
 - "meals_macros_calories.json" - to store calories and macros for each meal of that day
 
