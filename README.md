@@ -2,7 +2,7 @@
 
 ## Kibana Dashboard
 
-![Screenshot](myfitnesspalKibana.png)
+![Screenshot](myfitnesspal_kibana_official.png)
 
 ### Setup
 As outlined in python-myfitnesspal [documentation](https://python-myfitnesspal.readthedocs.io/en/latest/getting_started.html), we first need to install the package.
