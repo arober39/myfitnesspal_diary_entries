@@ -1,8 +1,9 @@
 # Send myfitnesspal data to Elasticsearch
+This repo allows you to send your nutrition data to Elasticsearch. The goal is to identify trends in your nutrition that can be used to determine necessary adjustments to overall calories and macros. It can also be used to understand how different foods support your health and fitness goals.
 
 ## Kibana Dashboard
 
-![Screenshot](myfitnesspal_kibana_official.png)
+![Screenshot](MyFitnessPal_Health_Dashboard.png)
 
 ### Setup
 As outlined in python-myfitnesspal [documentation](https://python-myfitnesspal.readthedocs.io/en/latest/getting_started.html), we first need to install the package.
