@@ -25,19 +25,23 @@ client = myfitnesspal.Client()
 
 # send breakfast, lunch, dinner structs to JSON file
 def send_meals_to_json_file(json_object):
-    meals_json_object = json.dumps(json_object)
-    meals_json = json.loads(meals_json_object)
-
-    with open("meals_macros_calories.json", "a") as outfile:
-        outfile.write(meals_json + ',')
+    if json_object:
+        meals_json_object = json.dumps(json_object, indent=4)
+        meals_json = json.loads(meals_json_object)
+        print(meals_json)
+        with open("meals_macros_calories.json", "a") as outfile:
+            outfile.write(meals_json + ',')
+    return
 
 # send each days overall calories and macros to JSON file
 def send_todays_total_to_json_file(json_object):
-    total_json_object = json.dumps(json_object, indent=4)
-    total_json = json.loads(total_json_object)
+    if json_object:
+        total_json_object = json.dumps(json_object, indent=4)
+        total_json = json.loads(total_json_object)
 
-    with open("macros_calories_overall.json", "a") as outfile:
-        outfile.write(total_json_object + ',')
+        with open("macros_calories_overall.json", "a") as outfile:
+            outfile.write(total_json_object + ',')
+    return
 
 #---------------------------------------------------
 #         Output - option 2 - Elasticsearch
@@ -45,17 +49,21 @@ def send_todays_total_to_json_file(json_object):
 
 # send breakfast, lunch, dinner structs to ES
 def send_meals_to_elasticsearch(meals_diary_entry):
-    es_client.index(
-        index='myfitnesspal_diary_official',
-        document=meals_diary_entry
-    )
+    if meals_diary_entry:
+        es_client.index(
+            index='myfitnesspal_diary_for_each_meal_index',
+            document=meals_diary_entry
+        )
+    return
 
 # send each days overall calories and macros to ES
 def send_todays_total_to_elasticsearch(total_daily_entry):
-    es_client.index(
-        index='daily_myfitnesspal_total_index',
-        document=total_daily_entry
-    )
+    if total_daily_entry:
+        es_client.index(
+            index='daily_myfitnesspal_for_each_day_index',
+            document=total_daily_entry
+        )
+    return
 
 # -----------------------------------------------------
 #        Prepare myfitnesspal data to send to ES
@@ -118,18 +126,18 @@ def structure_nutrition_data(dates):
     for date in dates:
         # get the meals for the day
         myfitnesspal_day = client.get_date(date.year, date.month, date.day)
+        date_str = str(date)
 
         if myfitnesspal_day:
             date_string = str(date.year) + '-' + str(date.month) + '-' + str(date.day)
-
             # send total calories and macros for the entire day to output function
             daily_total_dict = {
-                'date': date_string,
+                'date': date_str,
                 'daily_macros': myfitnesspal_day.totals
             }
-        
-            # send_todays_total_to_elasticsearch(daily_total_dict)
+    
             # send_todays_total_to_json_file(daily_total_dict)
+            # send_todays_total_to_elasticsearch(daily_total_dict)
 
             # get calories and macros for meals
             breakfast = myfitnesspal_day.meals[0]
@@ -137,28 +145,42 @@ def structure_nutrition_data(dates):
             dinner = myfitnesspal_day.meals[2]
             snacks = myfitnesspal_day.meals[3]
 
-            if breakfast and lunch and dinner and snacks:
-                breakfast_dict = parse_each_meal_for_extraction(date_string, vars(breakfast), breakfast.totals)
-                lunch_dict = parse_each_meal_for_extraction(date_string, vars(lunch), lunch.totals)
-                dinner_dict = parse_each_meal_for_extraction(date_string, vars(dinner), dinner.totals)
-                snacks_dict = parse_each_meal_for_extraction(date_string, vars(snacks), snacks.totals)
+            if breakfast:
+                 breakfast_dict = parse_each_meal_for_extraction(date_str, vars(breakfast), breakfast.totals)
+            else:
+                breakfast_dict = {}
+
+            if lunch:
+                lunch_dict = parse_each_meal_for_extraction(date_str, vars(lunch), lunch.totals)
+            else:
+                lunch_dict = {}
+
+            if dinner:
+                dinner_dict = parse_each_meal_for_extraction(date_str, vars(dinner), dinner.totals)
+            else:
+                dinner_dict = {}
+
+            if snacks:
+                snacks_dict = parse_each_meal_for_extraction(date_str, vars(snacks), snacks.totals)
+            else:
+                snacks_dict = {}
 
             # send macros and calories for each meal to output function
             breakfast_json_object = json.dumps(breakfast_dict)
             # send_meals_to_json_file(breakfast_json_object)
-            send_meals_to_elasticsearch(breakfast_json_object)
+            # send_meals_to_elasticsearch(breakfast_json_object)
 
             lunch_json_object = json.dumps(lunch_dict)
             # send_meals_to_json_file(lunch_json_object)
-            send_meals_to_elasticsearch(lunch_json_object)
+            # send_meals_to_elasticsearch(lunch_json_object)
 
             dinner_json_object = json.dumps(dinner_dict)
             # send_meals_to_json_file(dinner_json_object)
-            send_meals_to_elasticsearch(dinner_json_object)
+            # send_meals_to_elasticsearch(dinner_json_object)
         
             snacks_json_object = json.dumps(snacks_dict)
-            # send_meals_to_json_file(snack_json_object)
-            send_meals_to_elasticsearch(snacks_json_object)
+            # send_meals_to_json_file(snacks_json_object)
+            # send_meals_to_elasticsearch(snacks_json_object)
 
 def main():
     
