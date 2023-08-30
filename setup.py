@@ -1,2 +1,2 @@
-# Elasticsearch 7.x
-elasticsearch>=7.0.0,<8.0.0
+# Elasticsearch 8.x
+elasticsearch>=<8.0.0
