@@ -5,6 +5,7 @@ from elasticsearch import Elasticsearch
 import json
 import configparser
 
+
 config = configparser.ConfigParser()
 config.read('mfp_elastic.ini')
 
@@ -131,11 +132,14 @@ def structure_nutrition_data(dates):
         if myfitnesspal_day:
             date_string = str(date.year) + '-' + str(date.month) + '-' + str(date.day)
             # send total calories and macros for the entire day to output function
-            daily_total_dict = {
-                'date': date_str,
-                'daily_macros': myfitnesspal_day.totals
-            }
-    
+            if myfitnesspal_day.totals == {}:
+                print("No entries for this day")
+                return
+            else:
+                daily_total_dict = {
+                    'date': date_str,
+                    'daily_macros': myfitnesspal_day.totals
+                }
             # send_todays_total_to_json_file(daily_total_dict)
             # send_todays_total_to_elasticsearch(daily_total_dict)
 
@@ -145,47 +149,57 @@ def structure_nutrition_data(dates):
             dinner = myfitnesspal_day.meals[2]
             snacks = myfitnesspal_day.meals[3]
 
+
             if breakfast:
                  breakfast_dict = parse_each_meal_for_extraction(date_str, vars(breakfast), breakfast.totals)
             else:
                 breakfast_dict = {}
+                print("No breakfast entries for " + date_str)
 
             if lunch:
                 lunch_dict = parse_each_meal_for_extraction(date_str, vars(lunch), lunch.totals)
             else:
                 lunch_dict = {}
+                print("No lunch entries for " + date_str)
 
             if dinner:
                 dinner_dict = parse_each_meal_for_extraction(date_str, vars(dinner), dinner.totals)
             else:
                 dinner_dict = {}
+                print("No dinner entries for " + date_str)
 
             if snacks:
                 snacks_dict = parse_each_meal_for_extraction(date_str, vars(snacks), snacks.totals)
             else:
                 snacks_dict = {}
+                print("No snack entries for " + date_str)
 
             # send macros and calories for each meal to output function
-            breakfast_json_object = json.dumps(breakfast_dict)
-            # send_meals_to_json_file(breakfast_json_object)
-            # send_meals_to_elasticsearch(breakfast_json_object)
+            if breakfast_dict != {}:
+                breakfast_json_object = json.dumps(breakfast_dict)
+                # send_meals_to_json_file(breakfast_json_object)
+                # send_meals_to_elasticsearch(breakfast_json_object)
 
-            lunch_json_object = json.dumps(lunch_dict)
-            # send_meals_to_json_file(lunch_json_object)
-            # send_meals_to_elasticsearch(lunch_json_object)
+            if lunch_dict != {}:
+                lunch_json_object = json.dumps(lunch_dict)
+                # send_meals_to_json_file(lunch_json_object)
+                # send_meals_to_elasticsearch(lunch_json_object)
 
-            dinner_json_object = json.dumps(dinner_dict)
-            # send_meals_to_json_file(dinner_json_object)
-            # send_meals_to_elasticsearch(dinner_json_object)
-        
-            snacks_json_object = json.dumps(snacks_dict)
-            # send_meals_to_json_file(snacks_json_object)
-            # send_meals_to_elasticsearch(snacks_json_object)
+            if dinner_dict != {}:
+                dinner_json_object = json.dumps(dinner_dict)
+                # send_meals_to_json_file(dinner_json_object)
+                # send_meals_to_elasticsearch(dinner_json_object)
+
+            if snacks_dict != {}:
+                snacks_json_object = json.dumps(snacks_dict)
+                # send_meals_to_json_file(snacks_json_object)
+                # send_meals_to_elasticsearch(snacks_json_object)
+            
 
 def main():
     
-    start_date = date(2020, 10, 1)
-    end_date = date(2021, 5, 1)
+    start_date = date(2022, 10, 1)
+    end_date = date(2022, 10, 1)
     
     delta = timedelta(days=1)
     dates = []
