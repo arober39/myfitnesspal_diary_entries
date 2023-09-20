@@ -26,7 +26,8 @@ def main():
     start_date = date(2020, 10, 1)
     end_date = date(2020, 10, 2)
 ```
-### Output
+
+### Output Options
 #### Option 1 - Output to JSON file
 1. Output will be sent to separate json files
 - "macros_calories_overall.json" - to store total calories and macros for the day
@@ -90,4 +91,9 @@ def each_meals_macros_and_calories_output(breakfast_struct, lunch_struct, dinner
     dinner_json_object = json.dumps(dinner_struct)
     # send_meals_to_json_file(dinner_json_object)
     send_meals_to_elasticsearch(dinner_json_object)
+```
+#### Now all that's left to do is run the code
+
+```
+python3 myfitnesspal_to_elasticsearch.py
 ```
